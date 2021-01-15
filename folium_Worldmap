@@ -1,0 +1,31 @@
+# 지도 시각화 folium
+
+import folium
+import pandas as pd
+import time
+
+# 지도 시각화할 파일 불러오기
+
+map_data = pd.read_excel('./excel/최종파일.xlsx')
+map_data.head()
+
+# 개수별 원크기, 색깔 다르게 하기
+
+
+center_point = [32.3468904,6.1352215]
+world_map = folium.Map(location = center_point, zoom_start = 2)
+# 센터점 찍고, 지도 유형, 크기 / 크기는 2가 짱!
+
+for i in range(len(map_data)):
+    name = map_data['국가한글명'][i]
+    count = map_data['국가코드별 개수'][i]
+    long = float(map_data['경도'][i])
+    lat = float(map_data['위도'][i])
+    if int(count) < 100:
+        folium.CircleMarker((long,lat), radius = 10, color = 'red', popup = name).add_to(world_map)
+    elif 500 > int(count) >= 100:
+        folium.CircleMarker((long,lat), radius = 15, color = 'blue', popup = name).add_to(world_map)
+    elif 1000 > int(count) >= 500:
+        folium.CircleMarker((long,lat), radius = 20, color = 'Green', popup = name).add_to(world_map) 
+    
+world_map
