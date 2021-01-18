@@ -1,0 +1,36 @@
+import pandas as pd
+import folium
+import json
+
+worldmap_json = json.load(open('./world/WorldCountries.json', encoding = 'utf-8')) # json 파일 불러오기
+# {'PLACENAME': 'Germany'} 파일 타입
+
+worldmap = folium.Map(location = [32.3468904,6.1352215], tiles = 'CartoDB dark_matter', zoom_start = 2) # 세계지도 중앙점, 지도타입, 크기
+
+patent = pd.read_excel('./world/patent.xlsx') # 영어국가명, 개수 파일 불러오기
+
+folium.Choropleth(
+    geo_data = worldmap_json,
+    data = patent,
+    columns = ['국가명', '특허수'],
+    fill_color = 'YlGn',
+    fill_opacity = 0.7,
+    line_opacity = 0.5,
+    key_on = 'properties.PLACENAME').add_to(worldmap)
+
+worldmap
+
+
+# 경계선 생성하기
+def style_function(feature):
+    return {
+        'opacity' : 0.7,
+        'weight' : 1, # 선굵기
+        'color' : 'white',
+        'fillOpacity' : 0, # 경계선 내 색상
+        'dashArray' : '5,5',
+    }
+
+folium.GeoJson(worldmap_json, style_function = style_function).add_to(worldmap)
+
+worldmap
