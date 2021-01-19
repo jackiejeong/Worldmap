@@ -1,0 +1,6 @@
+import ujson
+
+with open('./project/json/WorldCountries.json', 'r', encoding = 'utf-8') as f:
+    data = json.load(f)
+
+df = pd.DataFrame(data)
