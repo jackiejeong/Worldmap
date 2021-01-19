@@ -1,0 +1,30 @@
+import pandas as pd
+import folium
+import json
+
+worldmap_json = json.load(open('./project/json/WorldCountries.json', encoding = 'utf-8')) # json 파일 불러오기
+# {'PLACENAME': 'Germany'} 파일 타입
+
+worldmap = folium.Map(location = [32.3468904,6.1352215], tiles = 'CartoDB dark_matter', zoom_start = 2)
+
+patent = pd.read_excel('./project/patent.xlsx') # 위즈도메인에서 가져온 엑셀 파일 불러오기
+
+patent_country = patent['국가코드'].value_counts() # =LEFT(?,2)로 국가코드 정리 후 해당 칼럼 불러오고, 개수 세기
+patent_country = patent_country.reset_index()
+patent_country.columns = ['국가코드', '특허수']
+
+
+country_code = pd.read_excel('./project/country_code.xlsx') # 국가코드 정리 엑셀 파일 불러오기
+
+file_merge = pd.merge(patent_country, country_code, how= 'left', on = '국가코드')
+
+folium.Choropleth(
+    geo_data = worldmap_json,
+    data = file_merge,
+    columns = ['영문명', '특허수'],
+    fill_color = 'YlGn',
+    fill_opacity = 0.7,
+    line_opacity = 0.5,
+    key_on = 'properties.PLACENAME').add_to(worldmap)
+
+worldmap
