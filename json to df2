@@ -1,0 +1,19 @@
+import ujson
+import json
+import pandas as pd
+
+worldmap_json = json.load(open('./project/json/WorldCountries.json', encoding = 'utf-8')) # json 파일 불러오기
+
+worldmap_json['features'][4]['properties'] # {'PLACENAME': 'Germany'} 파일 타입
+
+df_name = []
+for i in range(0,251):
+    place = worldmap_json['features'][i]['properties']
+    df_name.append(place)
+
+df_name
+
+df_name = pd.DataFrame(df_name) # pandas DataFrame
+df_name.head() # 확인
+
+df_name.to_excel('./project/df.xlsx', index=False) # 엑셀파일로 저장
