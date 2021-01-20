@@ -3,7 +3,7 @@ import folium
 import json
 
 worldmap_json = json.load(open('./project/json/WorldCountries.json', encoding = 'utf-8')) # json 파일 불러오기
-# {'PLACENAME': 'Germany'} 파일 타입
+worldmap_json['features'][0]['properties'] # {'PLACENAME': 'Germany'} 파일 타입
 
 worldmap = folium.Map(location = [32.3468904,6.1352215], tiles = 'CartoDB dark_matter', zoom_start = 2)
 
@@ -28,3 +28,5 @@ folium.Choropleth(
     key_on = 'properties.PLACENAME').add_to(worldmap)
 
 worldmap
+
+worldmap.save('./project/patentmap.html') # 저장하기
